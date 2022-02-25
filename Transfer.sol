@@ -21,7 +21,7 @@ contract Transfer {
         sender.transfer(getBalance());
     }
 
-    function transferTo (address payable _to) public {
-        _to.transfer(getBalance());
+    function transferTo (address payable _to, uint _count) public {
+        _to.transfer(_count);
     }
 }
