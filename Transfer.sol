@@ -1,16 +1,29 @@
 pragma solidity >=0.7.0;
+// SPDX-License-Identifier: MIT
+
 
 contract Transfer {
     uint public allReceivedMoney = 0;
     uint public lastTimestamp = block.timestamp;
+    address public owner;
+    mapping (address => uint) public users;
 
-    function receiveMoney() public payable {
+    constructor () {
+        owner = msg.sender;
+    }
+
+    fallback () public payable {
         lastTimestamp = block.timestamp;
         allReceivedMoney += msg.value;
+        users[msg.sender] += msg.value;
     }
 
     function getBalance () public view returns (uint) {
         return address(this).balance;
+    }
+
+    function getUsers () public memory returns (mapping) {
+        return users;
     }
 
     function getAddress () public view returns (address) {
@@ -31,8 +44,8 @@ contract Transfer {
 
     function checkTimestamp () private view {
         uint currentTimestamp = block.timestamp;
-        if(lastTimestamp + 60 > currentTimestamp){
-            revert("A minute has not passed since the last transaction");
+            if(lastTimestamp + 60 > currentTimestamp){
+                revert("A minute has not passed since the last transaction");
+            }
         }
     }
-}
